@@ -1,7 +1,7 @@
 from glob import glob
 import numpy as np
-import regex
-from scipy.interpolate import interp2d
+import re as regex
+from scipy.interpolate import interp2d, RegularGridInterpolator
 
 def get_data(filename,sites=None):
 	#"dat/MERRA2_400.inst3_3d_asm_Np.20180406.nc4.txt"
@@ -50,8 +50,8 @@ def get_data(filename,sites=None):
 			data[site][name] = np.zeros((Nhour,Npres))
 			for ihour,_ in enumerate(hour):
 				for ipres,_ in enumerate(pres):
-					func = interp2d(lon,lat,var[ihour,ipres,:,:])
-					data[site][name][ihour,ipres] = func(site_lon,site_lat)
+					func = RegularGridInterpolator((lon,lat),var[ihour,ipres,:,:])
+					data[site][name][ihour,ipres] = func(np.array([[site_lon,site_lat]]))
 	return data
 
 if __name__ == "__main__":
