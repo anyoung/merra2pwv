@@ -78,8 +78,8 @@ def get_data2(filename,sites=None):
 			data[site][name] = np.zeros((Nhour,Npres))
 			for ihour,_ in enumerate(hour):
 				for ipres,_ in enumerate(pres):
-					func = RegularGridInterpolator((lon,lat),var[ihour,ipres,:,:])
-					data[site][name][ihour,ipres] = func(np.array([[site_lon,site_lat]]))
+					func = RegularGridInterpolator((lat,lon),var[ihour,ipres,:,:])
+					data[site][name][ihour,ipres] = func(np.array([[site_lat,site_lon]]))
 	return data
 
 def get_data1(filename,sites=None):
@@ -129,8 +129,8 @@ def get_data1(filename,sites=None):
 			data[site][name] = np.zeros((Nhour,Npres))
 			for ihour,_ in enumerate(hour):
 				for ipres,_ in enumerate(pres):
-					func = RegularGridInterpolator((lon,lat),var[ihour,ipres,:,:])
-					data[site][name][ihour,ipres] = func(np.array([[site_lon,site_lat]]))
+					func = RegularGridInterpolator((lat,lon),var[ihour,ipres,:,:])
+					data[site][name][ihour,ipres] = func(np.array([[site_lat,site_lon]]))
 	return data
 
 if __name__ == "__main__":
