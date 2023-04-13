@@ -109,7 +109,7 @@ def get_data1(filename,sites=None):
 	T = np.zeros((Nhour,Npres,Nlat,Nlon))
 	for line in lines:
 		for var,name in zip((H,O3,QI,QL,RH,T),("H","O3","QI","QL","RH","T")):
-			if line.find(name) > -1:
+			if line.find(name + '[') == 0:
 				coords = regex.findall("\[[0-9]+\]",line.split(", ")[0])
 				ii_time = int(coords[0][1:-1])
 				jj_pres = int(coords[1][1:-1])
