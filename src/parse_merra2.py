@@ -135,13 +135,15 @@ def get_data1(filename,sites=None):
 
 if __name__ == "__main__":
 	sites = {"gamsberg": (16.22309385609976,-23.34357719776235,2347),
-	  "hess": (16.500478178158065,-23.271726947477347,1800)}
+	  "hesslo": (16.500478178158065,-23.271726947477347,1800),
+	  "hesshi":(16.530082,-23.241986,1900),
+	}
 	data = {}
-	for yy in range(2011,2021):
+	for yy in range(2009,2021):
 		data[yy] = {}
 		for mm in range(1,13):
 			data[yy][mm] = {}
-			filenames = glob("data/merra-2/*Np.%4d%02d*" % (yy,mm))
+			filenames = glob("/media/sf_test/amt/references/weather/Paine/data/merra-2/*Np.%4d%02d*" % (yy,mm))
 			Nf = len(filenames)
 			print("Found %d files for month %d/%02d" % (Nf,yy,mm))
 			daily_data = get_data(filenames[0],sites=sites)

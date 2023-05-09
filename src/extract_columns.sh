@@ -1,6 +1,18 @@
 #!/bin/bash
-out=column_data.csv
-echo "#site(gamsberg=0;hess=1),y,m,d,h,pwv(um),iwp(kg*m^-2),lwp(kg*m^-2),o3(DU)" > ${out}
+out="data/am-reduced/column_data.csv"
+cat >${out} <<EOL
+# Water column data
+# Sites are:
+#   0 = Gamsberg
+#   1 = HESS (low)
+#   2 = HESS (high)
+# Precipitable water vapour (pwv) is in micron
+# Ice water (iwp) is in kg/m^2
+# Liquid water (lwp) is in kg/m^2
+# Ozone (o3) is in Dobson units
+# Opacity and brightness temperatures are calculated at the frequency indicated (in GHz) by numeric suffix
+site,year,month,day,hour,pwv,iwp,lwp,o3
+EOL
 mPrev="-1"
 for f in data/am/*.err ; do
 	#f=data/am/gamsberg_2011y04m27d15h.err
@@ -24,19 +36,21 @@ for f in data/am/*.err ; do
 	bf=`basename -s .err $f`
 	s=`echo $bf | egrep -o "^[^_]+"`
 	if [ ${s} == "gamsberg" ] ; then
-		s="0"
-	elif [ ${s} == "hess" ] ; then
-		s="1"
+		sn="0"
+	elif [ ${s} == "hesslo" ] ; then
+		sn="1"
+	elif [ ${s} == "hesshi" ] ; then
+		sn="2"
 	else
-		s="-1"
+		sn="-1"
 	fi
 	y=`echo ${bf} | egrep -o "[0-9]{4}y" | egrep -o "[0-9]+"`
 	m=`echo ${bf} | egrep -o "[0-9]{2}m" | egrep -o "[0-9]+"`
 	d=`echo ${bf} | egrep -o "[0-9]{2}d" | egrep -o "[0-9]+"`
 	h=`echo ${bf} | egrep -o "[0-9]{2}h" | egrep -o "[0-9]+"`
-	echo "${s},${y},${m},${d},${h},${pwv},${iwp},${lwp},${o3}" >> ${out}
+	echo "${sn},${y},${m},${d},${h},${pwv},${iwp},${lwp},${o3}" >> ${out}
 	if [ ${mPrev} != ${m} ] ; then
-		echo "Starting ${y}/${m} for ${s}"
+		echo "Done ${y}/${m} for ${s}"
 	fi
 	mPrev=${m}
 done

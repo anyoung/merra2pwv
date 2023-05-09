@@ -4,7 +4,7 @@ from datetime import timedelta
 from os import system
 from sys import argv
 
-def compile_preamble(fmin=0,fmax=350,df=25):
+def compile_preamble(fmin=0,fmax=100e9,df=100e6):
 	return """# Atmospheric model based on MERRA-2 data
 #
 ?
@@ -215,15 +215,18 @@ signal.signal(signal.SIGINT, handler)
 
 if __name__ == "__main__":
 	sites = {"gamsberg": (16.22309385609976,-23.34357719776235,2347),
-	  "hess": (16.500478178158065,-23.271726947477347,1800)}
+	  "hesslo": (16.500478178158065,-23.271726947477347,1800),
+	  "hesshi":(16.530082,-23.241986,1900),
+	}
 	fmt_str = "%s_{}_%4dy%02dm"
 	din = np.load("data/sites/daily.npz")
 	P = din["P"]
 	h = din["h"]
-	for yy in range(2011,2020):
+	for yy in range(2009,2021):
 		for mm in range(1,13):
+			print("Year/Month: %4d/%02d" % (yy,mm))
 			for site in sites.keys():
-				print("Site: %s" % site)
+				print("    Site: %s" % site)
 				fmt_str_par = fmt_str % (site,yy,mm)
 				H = din[fmt_str_par.format("H")]
 				O3 = din[fmt_str_par.format("O3")]
@@ -233,7 +236,6 @@ if __name__ == "__main__":
 				T = din[fmt_str_par.format("T")]
 				for jj in range(H.shape[0]):
 					dd = jj + 1
-					print("  date: %4d/%02d/%02d" % (yy,mm,dd))
 					for ii,hh in enumerate(h):
 						base = "data/am/%s_%4dy%02dm%02dd%02dh" % (site,yy,mm,dd,hh)
 						H_,P_,T_,O3_,RH_,QL_,QI_ = limit_height(H[jj,ii,:],sites[site][2],P,T[jj,ii,:],O3[jj,ii,:],RH[jj,ii,:],QL[jj,ii,:],QI[jj,ii,:])
